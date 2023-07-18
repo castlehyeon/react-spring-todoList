@@ -22,6 +22,7 @@ public class TodoService {
         return savedEntity.getTitle();
     }
 
+    //생성
     public List<TodoEntity> create(final TodoEntity entity){
         //Valiations
         validate(entity);
@@ -34,10 +35,12 @@ public class TodoService {
 
     }
 
+    //검색
     public List<TodoEntity> retrieve(final String userId){
         return repository.findByUserId(userId);
     }
 
+    //수정
     public List<TodoEntity> update(final TodoEntity entity){
         validate(entity);
 
@@ -53,7 +56,22 @@ public class TodoService {
         return retrieve(entity.getUserId());
     }
 
-    //Valiations
+    //삭제
+    public List<TodoEntity> delete(final TodoEntity entity) {
+        validate(entity);
+
+        try {
+            repository.delete(entity);
+        } catch (Exception e) {
+            log.error("error deleting entity " , entity.getId());
+            //데이터베이스 내부 로직 캡슐화를 위해 객체 e를 리턴하지 않고 새로운 exception 객체를 리턴
+            throw new RuntimeException("error deleting entity " + entity.getId());
+        }
+
+        return retrieve(entity.getUserId());
+    }
+
+    //검증
     private void validate(final TodoEntity entity){
         if(entity == null) {
             log.warn("Entity cannot be null.");
