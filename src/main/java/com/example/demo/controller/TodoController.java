@@ -28,6 +28,19 @@ public class TodoController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping
+    public ResponseEntity<?> retrieveTodoList() {
+        String temporaryUserId = "temporary-user";
+
+        List<TodoEntity> entities = service.retrieve(temporaryUserId);
+
+        List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+        ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping
     public ResponseEntity<?> createTodo(@RequestBody TodoDTO dto){
         try{
