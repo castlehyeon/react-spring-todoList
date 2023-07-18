@@ -28,6 +28,7 @@ public class TodoController {
         return ResponseEntity.ok().body(response);
     }
 
+    //사용자 아이디에 해당하는 todo entity의 객체 리스트를 가져온다.
     @GetMapping
     public ResponseEntity<?> retrieveTodoList() {
         String temporaryUserId = "temporary-user";
@@ -41,6 +42,7 @@ public class TodoController {
         return ResponseEntity.ok().body(response);
     }
 
+    //todo 생성
     @PostMapping
     public ResponseEntity<?> createTodo(@RequestBody TodoDTO dto){
         try{
@@ -66,5 +68,23 @@ public class TodoController {
             ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
             return ResponseEntity.badRequest().body(response);
         }
+    }
+
+    //todo 수정
+    @PutMapping
+    public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto){
+        String temporaryUserId = "temporary-user"; //security 적용 전
+
+        TodoEntity entity = TodoDTO.toEntity(dto);
+
+        entity.setUserId(temporaryUserId);
+
+        List<TodoEntity> entities = service.update(entity);
+
+        List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+        ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+        return ResponseEntity.ok().body(response);
     }
 }
