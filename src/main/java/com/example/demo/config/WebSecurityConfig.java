@@ -37,10 +37,9 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.cors(withDefaults());
-
         //http 시큐리티 빌더
-        httpSecurity.csrf(csrf -> csrf.disable()) // csrf disable
+        httpSecurity.cors(withDefaults())
+                .csrf(csrf -> csrf.disable()) // csrf disable
                 .httpBasic(httpBasic -> httpBasic.disable())//token 사용으로 basic 인증 disable
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
