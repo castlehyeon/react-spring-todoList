@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -39,13 +40,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 //인증 완료. SecurityContextHolder에 등록
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         //일반적으로 인증된 사용자 정보를 담는 UserDetails 오브젝트를 넣는다.
-                        userId,
+                        userId, // AuthenticationPrincipal (principal)
                         null,
                         AuthorityUtils.NO_AUTHORITIES
                 );
+                log.info("authentication user ID : " + authentication);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-                securityContext.setAuthentication(authentication);
+                securityContext.setAuthentication(authentication); //authentication 객체 등록 -> 스프링은 Username...Token객체를 가져온다.
                 SecurityContextHolder.setContext(securityContext);
             }
         }catch (Exception ex){

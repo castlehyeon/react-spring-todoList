@@ -48,7 +48,6 @@ dependencies {
 	implementation group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
 	// https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
 	implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0.1'
-
 }
 
 tasks.named('test') {
